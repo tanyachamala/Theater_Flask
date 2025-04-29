@@ -1,0 +1,10 @@
+<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; padding: 10px;">
+  {% for movie in all_movies %}
+    <div style="text-align: center;">
+      <img src="{{ url_for('static', filename=movie.img) }}"
+           alt="{{ movie.title }}"
+           style="width: 150px; height: auto; border-radius: 10px; box-shadow: 0 0 8px #000;">
+      <div style="margin-top: 8px; font-weight: bold; color: white;">{{ movie.title }}</div>
+    </div>
+  {% endfor %}
+</div>

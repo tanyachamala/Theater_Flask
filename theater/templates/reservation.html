@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'auth/error.html' %}
+
+{% if projection %}
+<section class='form'>
+    <h2>&nbsp;&nbsp;Buy Ticket&nbsp;&nbsp;</h2>
+    <form action="{{ url_for('main.reservation_post') }}" method="post">
+
+        <div>
+            <img id="movie_image" src="{{ projection.movie.img }}" width="100" style="border-radius: 15px;" alt="">
+        </div>
+
+        <label for="projection"><br>{{ projection.movie.title }}<br></label>
+        <label for="projection">Select projection</label>
+        <select id="projection" name="projection" onchange="interactiveForm();">
+            {% for proj in projections %}
+                <option value="{{ proj.id }}" {% if proj.id == projection.id %}selected{% endif %}>
+                    Day: {{ proj.day.strftime('%d-%m-%Y') }}, Time: {{ proj.time.strftime('%H:%M') }}, Screen: {{ proj.screen.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <div id="more-seats">
+            <label for="seats"><br>Number of seats</label>
+            <select id="seats" name="seats" onchange="Price();">
+                <option id="option-seats" value="1" selected>1</option>
+                <!-- Add more options dynamically with JS if needed -->
+            </select>
+            <br>
+
+            <div><a id="price"></a></div>
+            <div><input class="submit" type="submit" value="Buy"/></div>
+        </div>
+
+        <div id="no-more-seats">
+            <p>NO MORE AVAILABLE SEATS. CHECK ALL OPTIONS.</p>
+        </div>
+    </form>
+</section>
+{% endif %}
+
+<section class="movie-projections">
+    <h2>&nbsp;&nbsp;See All Options&nbsp;&nbsp;</h2>
+
+    {% if projections and projections | length > 0 %}
+        {% include 'projections_table.html' %}
+    {% else %}
+        {% if projection and projection.movie and projection.movie.title %}
+            <p style="text-align: center">
+                THERE ARE NO {{ projection.movie.title.upper() }} PROJECTIONS SOON
+            </p>
+        {% else %}
+            <p style="text-align: center">
+                THERE ARE NO PROJECTIONS SOON
+            </p>
+        {% endif %}
+    {% endif %}
+</section>
+
+{% endblock %}

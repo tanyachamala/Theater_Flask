@@ -1,0 +1,46 @@
+<table style="width: 100%; text-align: center; border-collapse: collapse;">
+  <thead>
+    <tr>
+      <th>Movie Poster</th>
+      <th>Title</th>
+      <th>Screen</th>
+      <th>Seats Available</th>
+      <th>Day</th>
+      <th>Time</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for projection in projections %}
+      <tr>
+        <td>
+          {% if projection.movie and projection.movie.img %}
+            <img src="{{ url_for('static', filename=projection.movie.img) }}"
+                 alt="{{ projection.movie.title }}"
+                 style="height: 100px; border-radius: 8px;">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/placeholder.jpg') }}"
+                 alt="No Image"
+                 style="height: 100px; border-radius: 8px;">
+          {% endif %}
+        </td>
+        <td>{{ projection.movie.title if projection.movie else 'Unknown' }}</td>
+        <td>{{ projection.screen.name if projection.screen else 'Unknown' }}</td>
+        <td>
+          {% if projection.screen %}
+            {{ projection.screen.num_total_seats - (projection.seats_taken or 0) }}
+          {% else %}
+            N/A
+          {% endif %}
+        </td>
+        <td>{{ projection.day.strftime('%d-%m-%Y') }}</td>
+        <td>{{ projection.time.strftime('%H:%M') }}</td>
+        <td>
+          <a href="{{ url_for('main.reservation', id=projection.id) }}">
+            <button class="button">Buy Ticket</button>
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
